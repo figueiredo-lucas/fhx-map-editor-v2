@@ -1,9 +1,7 @@
-import styled from 'styled-components'
-
-export const Container = styled.button`
+.button {
   height: 42px;
   padding: 0 24px;
-  
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -25,4 +23,4 @@ export const Container = styled.button`
   &:active {
     filter: brightness(0.7);
   }
-`
+}

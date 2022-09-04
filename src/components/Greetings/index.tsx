@@ -1,5 +1,5 @@
 import { Button } from '../Button'
-import { Container, Image, Text } from './styles'
+import './styles.scss';
 
 export function Greetings() {
   function handleSayHello() {
@@ -9,14 +9,14 @@ export function Greetings() {
   }
 
   return (
-    <Container>
-      <Image
+    <div className="container">
+      <img className="img"
         src="https://www.vectorlogo.zone/logos/reactjs/reactjs-icon.svg"
         alt="ReactJS logo"
       />
-      <Text>An Electron boilerplate including TypeScript, React, Jest and ESLint.</Text>
+      <p className="paragraph">An Electron boilerplate including TypeScript, React, Jest and ESLint.</p>
       <Button onClick={handleSayHello}>Send message to main process</Button>
-    </Container>
+    </div>
   )
 }
- 
+
