@@ -9,9 +9,13 @@ export const api = {
    * The function below can accessed using `window.Main.sendMessage`
    */
 
-  sendMessage: (message: string) => {
-    ipcRenderer.send('message', message)
+  sendMessage: (message: string, payload: any) => {
+    ipcRenderer.send(message, payload)
   },
+
+  sendSyncMessage: (message: string, payload: any) =>
+    ipcRenderer.sendSync(message, payload)
+  ,
 
   /**
    * Provide an easier way to listen to events

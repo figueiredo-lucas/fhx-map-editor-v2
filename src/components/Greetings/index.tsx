@@ -1,21 +1,19 @@
-import { Button } from '../Button'
+import { useState } from 'react';
+import { MapRender } from '../MapRender';
 import './styles.scss';
 
 export function Greetings() {
-  function handleSayHello() {
-    window.Main.sendMessage('Hello World');
+  const [mapEntries, setMapEntries] = useState([]);
+  const [mapName, setMapName] = useState('');
 
-    console.log('Message sent! Check main process log in terminal.')
-  }
+  window.Main.on('minimap-changed', (data: any) => {
+    setMapEntries(data.entries);
+    setMapName(data.mapName);
+  });
 
   return (
     <div className="container">
-      <img className="img"
-        src="https://www.vectorlogo.zone/logos/reactjs/reactjs-icon.svg"
-        alt="ReactJS logo"
-      />
-      <p className="paragraph">An Electron boilerplate including TypeScript, React, Jest and ESLint.</p>
-      <Button onClick={handleSayHello}>Send message to main process</Button>
+      <MapRender entries={mapEntries} mapName={mapName} />
     </div>
   )
 }
