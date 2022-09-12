@@ -1,5 +1,5 @@
 import { app, BrowserWindow, ipcMain, protocol } from 'electron'
-import { directoryLoadingListeners, setupDirs } from './directory-loader'
+import { directoryLoadingListeners, setupDirs } from './directories/game-files-loader'
 import { buildMenu } from './menu'
 import { serverStartup } from './server'
 

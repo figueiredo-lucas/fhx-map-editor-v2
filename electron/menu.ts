@@ -1,5 +1,5 @@
 import { Menu, MenuItem } from "electron"
-import { getMinimapFiles, getZones } from "./directory-loader";
+import { getMinimapFiles, getZones } from "./directories/game-files-loader";
 
 export const buildMenu = () => {
   const menu = Menu.getApplicationMenu();

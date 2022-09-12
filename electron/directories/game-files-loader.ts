@@ -1,9 +1,9 @@
 import { ipcMain } from 'electron';
 import * as fs from 'fs/promises';
 import { join } from 'path';
-import { MAIN_DIR, MINIMAP_DIR, ZONES_DIR } from '../shared/paths';
-import { BfwdParser } from './parsers/bfwd';
-import { BwhParser } from './parsers/bwh';
+import { MAIN_DIR, MINIMAP_DIR, ZONES_DIR } from '../../shared/paths';
+import { BfwdParser } from '../parsers/bfwd';
+import { BwhParser } from '../parsers/bwh';
 
 const MINIMAP_NAME_REGEX = /[A-Z_]+z\d{1,3}x\d{1,3}_Mini[mM]ap\.bmp/
 
