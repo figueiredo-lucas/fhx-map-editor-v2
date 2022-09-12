@@ -2,6 +2,8 @@ import { ipcMain } from 'electron';
 import * as fs from 'fs/promises';
 import { join } from 'path';
 import { MAIN_DIR, MINIMAP_DIR, ZONES_DIR } from '../shared/paths';
+import { BfwdParser } from './parsers/bfwd';
+import { BwhParser } from './parsers/bwh';
 
 const MINIMAP_NAME_REGEX = /[A-Z_]+z\d{1,3}x\d{1,3}_Mini[mM]ap\.bmp/
 
@@ -49,10 +51,44 @@ export const getMinimapFiles = async (mapName: string) => {
 }
 
 export const getZones = () =>
-  dirRefs.zones.entries?.filter(e => /.*[^\.xml|^\.bwh]$/i.test(e));
+  dirRefs.zones.entries?.filter(e => !e.toLowerCase().endsWith('.xml') && !e.toLowerCase().endsWith('.bwh'));
+
+export const getBwh = async (mapName: string) => {
+  const fileName = `${mapName}.bwh`;
+  if (!dirRefs.zones.entries?.includes(fileName)) throw 'Invalid map name';
+
+  const parser = new BwhParser();
+  const file = await fs.readFile(join(ZONES_DIR, fileName));
+  return parser.parse(file, fileName, file.byteLength);
+}
+
+export const getBfwd = async (mapName: string, bfwdName: string) => {
+  if (!dirRefs.zones.entries?.includes(mapName)) throw 'Invalid map name';
+  const mapDirectory = join(ZONES_DIR, mapName);
+  const directoryData = await fs.readdir(mapDirectory);
+  const fileName = `${bfwdName}.bfwd`;
+
+  if (!directoryData.includes(fileName)) throw 'Invalid bfwd name';
+
+  const parser = new BfwdParser();
+  const file = await fs.readFile(join(mapDirectory, fileName));
+  return parser.parse(file, fileName, file.byteLength);
+}
 
 export const directoryLoadingListeners = () => {
   ipcMain.on('get-minimap', async (event, mapName) => {
-    event.returnValue = await getMinimapFiles(mapName);
+    try {
+      event.returnValue = await getMinimapFiles(mapName);
+    } catch (err) {
+      event.returnValue = err;
+    }
   })
+
+  ipcMain.on('get-bwfd', async (event, { mapName, bfwdName }: { mapName: string, bfwdName: string }) => {
+    try {
+      event.returnValue = await getBfwd(mapName, bfwdName);
+    } catch (err) {
+      event.returnValue = err;
+    }
+  });
 }

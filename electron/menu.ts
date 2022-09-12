@@ -6,7 +6,6 @@ export const buildMenu = () => {
   const mapsMenu = new MenuItem({ id: 'maps', label: 'Maps', submenu: [] });
   const zones = getZones() || [];
   zones.forEach(z => {
-    console.log('ENTREI', z)
     const item = new MenuItem({
       id: z.toLowerCase().replace(/\s/g, ''),
       label: z,

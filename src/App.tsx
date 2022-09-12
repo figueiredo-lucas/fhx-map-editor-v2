@@ -1,11 +1,13 @@
-import { Greetings } from './components/Greetings'
-
+import { Container } from './components/Container'
+import { Header } from './components/Header';
+import MouseModeProvider from './providers/MouseMode';
 import './styles/global.scss';
 
 export function App() {
   return (
-    <>
-      <Greetings />
-    </>
+    <MouseModeProvider>
+      <Header />
+      <Container />
+    </MouseModeProvider>
   )
 }
