@@ -22,5 +22,9 @@ export interface BWH extends FileMetadata { // BladeEngine World Header
   unk3: number,
   zone: Field[],
   count_music: number,
-  music: Ogg[]
+  music: Ogg[],
+  bfwdCells?: {
+    [key: string]: number[] // from bfwd, will be saved as z0x0: [0,0,0,0...]
+  },
+  minimap?: string[]
 }

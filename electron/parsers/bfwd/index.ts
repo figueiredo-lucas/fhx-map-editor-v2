@@ -17,6 +17,7 @@ export class BfwdParser extends FileParser<BFWD> {
     this.readEffects(buffer, file);
     this.readSounds(buffer, file);
     this.readWaters(buffer, file);
+    console.log(`Parsed \x1b[35m${filename}\x1b[0m successfully`);
     return file;
   };
 

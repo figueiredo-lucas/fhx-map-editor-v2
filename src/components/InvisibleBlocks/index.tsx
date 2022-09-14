@@ -1,29 +1,30 @@
 import React, { useEffect, useRef } from 'react'
+import { MapMeta } from '../MapRender/types';
 import './styles.scss';
 
 export const InvisBlocks = ({ size, mapMeta }: { size: number, mapMeta: MapMeta }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const drawingSize = size / 128;
-  // mapMeta.mapEntries
 
   const draw = (ctx: CanvasRenderingContext2D) => {
+    console.log('drawing now');
     ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     const maxX = mapMeta.maxX;
     const maxY = mapMeta.maxZ;
-    const xSize = size * (maxX + 1);
-    const ySize = size * (maxY + 1);
+    const xSize = size * maxX;
+    const ySize = size * maxY;
     mapMeta.mapEntries.forEach((entry, idx) => {
-      const row = Math.floor(idx / (mapMeta.maxX + 1));
-      const col = idx % (mapMeta.maxX + 1);;
+      const row = Math.floor(idx / (mapMeta.maxX));
+      const col = idx % (mapMeta.maxX);
 
-      if (entry.active && entry.entryData) {
-        entry.entryData.fieldCells.forEach((c: any, i: number) => {
-          if (c.cellType1 & (1 << 0)) {
+      if (entry.entryData) {
+        entry.entryData.forEach((d: any, i: number) => {
+          if (d & (1 << 0)) {
             const cellRow = Math.floor(i / 128);
             const cellCol = 128 - i % 128;
-            const y = ySize - ((maxY - col) * size + cellCol * drawingSize);
-            const x = xSize - ((maxX - row) * size + cellRow * drawingSize);
+            const y = ySize - ((maxY - 1 - col) * size + cellCol * drawingSize);
+            const x = xSize - ((maxX - 1 - row) * size + cellRow * drawingSize);
             ctx.fillRect(y, x, drawingSize, drawingSize);
           }
         })
@@ -44,6 +45,6 @@ export const InvisBlocks = ({ size, mapMeta }: { size: number, mapMeta: MapMeta 
   }, [draw])
 
   return (
-    <canvas width={size * (mapMeta.maxX + 1)} height={size * (mapMeta.maxZ + 1)} ref={canvasRef} className="invisible-blocks-canvas" />
+    <canvas width={size * (mapMeta.maxX)} height={size * (mapMeta.maxZ)} ref={canvasRef} className="invisible-blocks-canvas" />
   )
 }

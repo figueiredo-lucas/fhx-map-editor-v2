@@ -1,7 +1,9 @@
-import { app, BrowserWindow, ipcMain, protocol } from 'electron'
-import { directoryLoadingListeners, setupDirs } from './directories/game-files-loader'
-import { buildMenu } from './menu'
-import { serverStartup } from './server'
+import { app, BrowserWindow, ipcMain } from 'electron';
+import { directoryLoadingListeners, setupDirs } from './directories/game-files-loader';
+import { buildMenu } from './menu';
+import { serverStartup } from './server';
+import { setupBase } from './directories/base';
+import { setupCache } from './directories/cache';
 
 let mainWindow: BrowserWindow | null
 
@@ -42,15 +44,21 @@ async function registerListeners() {
     console.log(message)
   })
 
+  ipcMain.once('bootrstrap-cache', () => {
+    setupCache();
+    mainWindow?.webContents.send('cache-loading-end');
+  });
+
   directoryLoadingListeners();
 }
 
 app.on('ready', createWindow)
   .whenReady()
+  .then(serverStartup)
   .then(registerListeners)
   .then(setupDirs)
-  .then(serverStartup)
   .then(buildMenu)
+  .then(setupBase)
   .catch(e => console.error(e))
 
 app.on('window-all-closed', () => {

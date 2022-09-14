@@ -36,7 +36,7 @@ type MouseModeType = {
   changeMouseMode: (key: string) => void
 }
 
-const MouseMode = React.createContext<MouseModeType>({ mouseMode: mouseModes.pointer, changeMouseMode: () => { } });
+const MouseModeContext = React.createContext<MouseModeType>({ mouseMode: mouseModes.pointer, changeMouseMode: () => { } });
 
 const MouseModeProvider = ({ children }: PropsWithChildren) => {
   const [mouseMode, setMouseMode] = useState(mouseModes.pointer);
@@ -45,12 +45,12 @@ const MouseModeProvider = ({ children }: PropsWithChildren) => {
     setMouseMode(mouseModes[key]);
   }
 
-  return <MouseMode.Provider value={{ mouseMode, changeMouseMode }}>
+  return <MouseModeContext.Provider value={{ mouseMode, changeMouseMode }}>
     {children}
-  </MouseMode.Provider>
+  </MouseModeContext.Provider>
 }
 
 export default MouseModeProvider;
 
-export const useMouseModeContext = () => useContext(MouseMode);
+export const useMouseModeContext = () => useContext(MouseModeContext);
 

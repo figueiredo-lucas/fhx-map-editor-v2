@@ -1,5 +1,5 @@
 import { Menu, MenuItem } from "electron"
-import { getMinimapFiles, getZones } from "./directories/game-files-loader";
+import { assembleBwh, getZones } from "./directories/game-files-loader";
 
 export const buildMenu = () => {
   const menu = Menu.getApplicationMenu();
@@ -10,7 +10,7 @@ export const buildMenu = () => {
       id: z.toLowerCase().replace(/\s/g, ''),
       label: z,
       click: async (menuItem, window) => {
-        window?.webContents.send('minimap-changed', { entries: await getMinimapFiles(menuItem.label), mapName: menuItem.label });
+        window?.webContents.send('map-selected', await assembleBwh(menuItem.label))
       }
     });
 

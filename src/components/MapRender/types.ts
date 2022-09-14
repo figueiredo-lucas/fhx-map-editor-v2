@@ -1,24 +1,21 @@
-type MapEntry = {
-  name: string,
+import { BWH } from "../../../electron/parsers/bwh/bwh";
+
+export type MapEntry = {
+  name: string;
   isEmpty?: boolean;
-  z: number,
-  x: number,
-  active: boolean,
-  entryData?: any
+  z: number;
+  x: number;
+  entryData?: number[];
 }
 
-type MapMeta = {
-  maxZ: number,
-  maxX: number,
-  mapEntries: MapEntry[]
+export type MapMeta = {
+  mapName: string;
+  maxZ: number;
+  maxX: number;
+  mapEntries: MapEntry[];
 }
 
-type MapEntryAction = {
+export type MapEntryAction = {
   type: string;
-  entries?: string[];
-  entryInfo?: {
-    index: number;
-    entry: MapEntry;
-    entryData?: any
-  };
+  map: BWH | null;
 }

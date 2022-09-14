@@ -1,10 +1,9 @@
 .mouse-selector {
-  display: flex;
-  width: 100%;
-  background-color: #2c2c2c;
-  height: 48px;
+  position: absolute;
+  left: 0;
 
   button {
+    height: 48px;
     cursor: pointer;
     background-color: #2c2c2c;
     border: 0;

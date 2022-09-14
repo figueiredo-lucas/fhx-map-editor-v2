@@ -1,9 +1,10 @@
 import { ipcMain } from 'electron';
-import * as fs from 'fs/promises';
+import { readdir, readFile } from 'fs-extra';
 import { join } from 'path';
 import { MAIN_DIR, MINIMAP_DIR, ZONES_DIR } from '../../shared/paths';
 import { BfwdParser } from '../parsers/bfwd';
 import { BwhParser } from '../parsers/bwh';
+import { loadBfwdJson, loadBwhJson } from './cache';
 
 const MINIMAP_NAME_REGEX = /[A-Z_]+z\d{1,3}x\d{1,3}_Mini[mM]ap\.bmp/
 
@@ -29,7 +30,7 @@ const dirRefs: DirectoryRefs = {
 const dirCache: DirectoryRefs = {};
 
 const readDir = async (ref: DirectoryRefs, key: string) => {
-  ref[key].entries = await fs.readdir(ref[key].path);
+  ref[key].entries = await readdir(ref[key].path);
 }
 
 export const setupDirs = async () =>
@@ -58,20 +59,20 @@ export const getBwh = async (mapName: string) => {
   if (!dirRefs.zones.entries?.includes(fileName)) throw 'Invalid map name';
 
   const parser = new BwhParser();
-  const file = await fs.readFile(join(ZONES_DIR, fileName));
+  const file = await readFile(join(ZONES_DIR, fileName));
   return parser.parse(file, fileName, file.byteLength);
 }
 
 export const getBfwd = async (mapName: string, bfwdName: string) => {
   if (!dirRefs.zones.entries?.includes(mapName)) throw 'Invalid map name';
   const mapDirectory = join(ZONES_DIR, mapName);
-  const directoryData = await fs.readdir(mapDirectory);
+  const directoryData = await readdir(mapDirectory);
   const fileName = `${bfwdName}.bfwd`;
 
   if (!directoryData.includes(fileName)) throw 'Invalid bfwd name';
 
   const parser = new BfwdParser();
-  const file = await fs.readFile(join(mapDirectory, fileName));
+  const file = await readFile(join(mapDirectory, fileName));
   return parser.parse(file, fileName, file.byteLength);
 }
 
@@ -91,4 +92,16 @@ export const directoryLoadingListeners = () => {
       event.returnValue = err;
     }
   });
+}
+
+export const assembleBwh = async (mapName: string) => {
+  const bwh = await loadBwhJson(mapName + '.bwh');
+  const bfwdNames = bwh.zone.filter(z => z.is_active).map(z => z.name.split('\u0000')[0]);
+  bwh.minimap = await getMinimapFiles(mapName);
+  const cells: { [key: string]: number[] } = {};
+  bfwdNames.map(name => {
+    cells[name] = loadBfwdJson(name + '.bfwd', mapName);
+  });
+  bwh.bfwdCells = cells;
+  return bwh;
 }

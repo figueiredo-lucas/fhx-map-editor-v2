@@ -1,20 +1,23 @@
 import React, { useEffect, useReducer, useState } from 'react'
-import { map } from '../../../webpack/rules.webpack';
+import { useMapContext } from '../../providers/Map';
 import { Grid } from '../Grid';
 import { InvisBlocks } from '../InvisibleBlocks';
-import mapEntryReducer, { BUILD_MAP_ENTRY_DATA, BUILD_MAP_META, initialState, TOGGLE_MAP_ENTRY } from './mapEntryReducer';
+import mapEntryReducer, { BUILD_MAP_META, initialState } from './mapEntryReducer';
 import './styles.scss';
 
-export const MapRender = ({ entries, mapName }: { mapName: string, entries: string[] }) => {
+export const MapRender = () => {
 
   const [zoom, setZoom] = useState(100);
   const [zoomLock, setZoomLock] = useState(false);
   const [mapMeta, dispatch] = useReducer(mapEntryReducer, initialState);
+  const map = useMapContext();
 
   useEffect(() => {
-    dispatch({ type: BUILD_MAP_META, entries });
+    if (map) {
+      dispatch({ type: BUILD_MAP_META, map });
+    }
     setZoomLock(false);
-  }, [entries]);
+  }, [map]);
 
   useEffect(() => {
     const ctrlScrollZoom = (event: WheelEvent) => {
@@ -39,24 +42,13 @@ export const MapRender = ({ entries, mapName }: { mapName: string, entries: stri
     }
   }, [zoomLock]);
 
-  const loadBlockData = (entry: MapEntry, index: number) => {
-    if (!entry.isEmpty) {
-      if (!entry.entryData) {
-        const entryData = window.Main.sendSyncMessage('get-bwfd', { mapName, bfwdName: entry.name.replace(/_minimap\.bmp/i, '') });
-        dispatch({ type: BUILD_MAP_ENTRY_DATA, entryInfo: { index, entry, entryData } });
-      } else {
-        dispatch({ type: TOGGLE_MAP_ENTRY, entryInfo: { index, entry } });
-      }
-    }
-  }
-
   const hasEntries = mapMeta.mapEntries.length > 0;
 
-  const size = hasEntries ? (window.screen.availHeight * 0.8) / (mapMeta.maxZ + 1) * (zoom / 100) : 0;
+  const size = hasEntries ? (window.screen.availHeight * 0.8) / (mapMeta.maxZ) * (zoom / 100) : 0;
   if (size > (window.screen.availHeight * 0.7) && !zoomLock) {
     setZoomLock(true);
   }
-  const gridSize = hasEntries ? mapMeta.maxX + 1 : 0;
+  const gridSize = hasEntries ? mapMeta.maxX : 0;
 
   return (
     <div className="map-render">
@@ -64,7 +56,7 @@ export const MapRender = ({ entries, mapName }: { mapName: string, entries: stri
       <InvisBlocks size={size} mapMeta={mapMeta} />
       <div className="image-grid" style={{ gridTemplateColumns: `repeat(${gridSize}, ${size + 'px'} [col-start])` }}>
         {mapMeta.mapEntries.map((e, i) =>
-          <img className={e.active ? 'active' : ''} onClick={() => loadBlockData(e, i)} style={{ width: size }} key={i} src={`http://localhost:8000/minimap/${mapName}/${e.name}`} alt={e.name} />
+          <img style={{ width: size }} key={i} src={`http://localhost:8000/minimap/${mapMeta.mapName}/${e.name}`} alt={e.name} />
         )}
       </div>
     </div>

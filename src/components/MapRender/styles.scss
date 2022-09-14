@@ -3,18 +3,5 @@
 
   .image-grid {
     display: grid;
-
-    img {
-      opacity: 0.75;
-    }
-
-    img:hover {
-      opacity: 1;
-    }
-
-    img.active {
-      opacity: 1;
-    }
-
   }
 }

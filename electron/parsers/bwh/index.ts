@@ -26,7 +26,7 @@ export class BwhParser extends FileParser<BWH> {
     this.readZone(buffer, file);
     file.count_music = this.bh.readInt32LE(buffer);
     this.readOgg(buffer, file);
-    console.log('Parsed successfully');
+    console.log(`Parsed \x1b[35m${filename}\x1b[0m successfully`);
     return file;
   }
 
