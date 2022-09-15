@@ -1,0 +1,29 @@
+.loading {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  img {
+    margin-bottom: 1rem;
+    pointer-events: none;
+    width: 150px;
+    height: 150px;
+    animation: Spin infinite 0.85s linear;
+  }
+}
+
+@keyframes Spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

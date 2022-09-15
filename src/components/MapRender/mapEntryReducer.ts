@@ -9,8 +9,7 @@ const NAME_REGEX = /[A-Z_]+z(\d{1,3})x(\d{1,3})_Mini[mM]ap\.bmp/;
 const TEST_MINIMAP = 'Test_MiniMap.bmp';
 
 export const BUILD_MAP_META = 'build-map-meta';
-export const TOGGLE_MAP_ENTRY = 'toggle-map-entry';
-export const BUILD_MAP_ENTRY_DATA = 'build-map-entry-data';
+export const CLEAR_MAP_META = 'clear-map-meta';
 
 const getEntriesMeta = (map: BWH): MapMeta => {
   const mapMeta: MapMeta = {
@@ -68,20 +67,9 @@ export default (state: MapMeta, action: MapEntryAction) => {
       fillMissingIds(mapMeta);
       return mapMeta;
     }
-    // case TOGGLE_MAP_ENTRY: {
-    //   if (!action.entryInfo) throw `Trying to toggle entry that doesn't exist.`;
-    //   const entry = { ...action.entryInfo.entry };
-    //   entry.active = !action.entryInfo.entry.active
-    //   state.mapEntries.splice(action.entryInfo?.index, 1, entry);
-    //   return { ...state };
-    // }
-    // case BUILD_MAP_ENTRY_DATA:
-    //   if (!action.entryInfo || !action.entryInfo.entryData) throw `Trying to add entry data to an invalid entry`;
-    //   const entry = { ...action.entryInfo.entry };
-    //   entry.active = true;
-    //   entry.entryData = action.entryInfo.entryData;
-    //   state.mapEntries.splice(action.entryInfo?.index, 1, entry);
-    //   return { ...state };
+    case CLEAR_MAP_META: {
+      return { ...initialState };
+    }
     default:
       throw new Error();
   }

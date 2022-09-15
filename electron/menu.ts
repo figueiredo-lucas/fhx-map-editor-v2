@@ -10,6 +10,7 @@ export const buildMenu = () => {
       id: z.toLowerCase().replace(/\s/g, ''),
       label: z,
       click: async (menuItem, window) => {
+        window?.webContents.send('show-loading');
         window?.webContents.send('map-selected', await assembleBwh(menuItem.label))
       }
     });

@@ -5,11 +5,12 @@ type GridProps = {
   width: number;
   height: number;
   showBlockGrid?: boolean;
+  style?: React.CSSProperties
 };
 
-export const Grid = ({ width, height, showBlockGrid }: GridProps) => {
+export const Grid = ({ width, height, showBlockGrid, style }: GridProps) => {
   return (
-    <div className="grid">
+    <div className="grid" style={style}>
       <svg xmlns="http://www.w3.org/2000/svg">
         <defs>
           <pattern id="smallGrid" width={width / 128} height={height / 128} patternUnits="userSpaceOnUse">

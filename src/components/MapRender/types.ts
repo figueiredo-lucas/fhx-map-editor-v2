@@ -17,5 +17,5 @@ export type MapMeta = {
 
 export type MapEntryAction = {
   type: string;
-  map: BWH | null;
+  map?: BWH | null;
 }

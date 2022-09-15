@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from 'react'
+import { LayerEnum, useLayerContext } from '../../providers/Layers';
 import { MapMeta } from '../MapRender/types';
 import './styles.scss';
 
-export const InvisBlocks = ({ size, mapMeta }: { size: number, mapMeta: MapMeta }) => {
+export const InvisBlocks = ({ size, mapMeta, style }: { size: number, mapMeta: MapMeta, style: any }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const layerCtx = useLayerContext();
   const drawingSize = size / 128;
 
   const draw = (ctx: CanvasRenderingContext2D) => {
@@ -33,18 +35,20 @@ export const InvisBlocks = ({ size, mapMeta }: { size: number, mapMeta: MapMeta 
   }
 
   useEffect(() => {
-
     const canvas = canvasRef.current
     if (canvas) {
       const context = canvas.getContext('2d');
 
-      if (context) {
-        draw(context)
+      if (context && mapMeta.mapEntries.length > 0) {
+        draw(context);
+        layerCtx?.toggleLayer(LayerEnum.LOADING, false);
       }
     }
-  }, [draw])
+  }, [mapMeta])
 
   return (
-    <canvas width={size * (mapMeta.maxX)} height={size * (mapMeta.maxZ)} ref={canvasRef} className="invisible-blocks-canvas" />
+    <>
+      <canvas style={style} width={size * (mapMeta.maxX)} height={size * (mapMeta.maxZ)} ref={canvasRef} className="invisible-blocks__canvas" />
+    </>
   )
 }

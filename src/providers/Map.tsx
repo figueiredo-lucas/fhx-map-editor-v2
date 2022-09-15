@@ -1,11 +1,19 @@
 import React, { PropsWithChildren, useContext, useEffect, useState } from "react";
 import { BWH } from "../../electron/parsers/bwh/bwh";
+import { LayerEnum, useLayerContext } from "./Layers";
 
 
 const MapContext = React.createContext<BWH | null>(null);
 
 const MapProvider = ({ children }: PropsWithChildren) => {
   const [currentMap, setCurrentMap] = useState<BWH | null>(null);
+  const layerCtx = useLayerContext();
+
+  useEffect(() => {
+    if (layerCtx?.layerInfo.showLoading) {
+      setCurrentMap(null);
+    }
+  }, [layerCtx]);
 
   useEffect(() => {
     window.Main.on('map-selected', (data: BWH) => {
