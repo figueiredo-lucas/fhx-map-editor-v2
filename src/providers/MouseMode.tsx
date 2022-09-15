@@ -2,13 +2,13 @@ import React, { PropsWithChildren, useContext, useState } from "react"
 import { IconType } from "react-icons";
 import { BsHandIndexThumb, BsTrash, BsArrowsMove, BsBrush } from 'react-icons/bs';
 
-interface IMouseMode {
+type MouseModeType = {
   className: string,
   cursorIcon?: IconType,
   altName: string
 }
 
-export const mouseModes: { [key: string]: IMouseMode } = {
+export const mouseModes: { [key: string]: MouseModeType } = {
   pointer: {
     className: 'pointer',
     cursorIcon: BsHandIndexThumb,
@@ -31,12 +31,12 @@ export const mouseModes: { [key: string]: IMouseMode } = {
   }
 }
 
-type MouseModeType = {
-  mouseMode: IMouseMode,
+export interface IMouseMode {
+  mouseMode: MouseModeType,
   changeMouseMode: (key: string) => void
 }
 
-const MouseModeContext = React.createContext<MouseModeType>({ mouseMode: mouseModes.pointer, changeMouseMode: () => { } });
+const MouseModeContext = React.createContext<IMouseMode>({ mouseMode: mouseModes.pointer, changeMouseMode: () => { } });
 
 const MouseModeProvider = ({ children }: PropsWithChildren) => {
   const [mouseMode, setMouseMode] = useState(mouseModes.pointer);

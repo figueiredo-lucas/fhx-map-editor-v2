@@ -23,7 +23,7 @@ export enum HeavenEnum {
   NIGHT_FOG = "night_fog"
 }
 
-interface ILayerContext {
+export interface ILayerContext {
   layerInfo: LayerInfo,
   toggleLayer: (type: LayerEnum, value?: boolean | HeavenEnum) => void
 }
