@@ -1,4 +1,5 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
+import { join } from 'path';
 import { directoryLoadingListeners, setupDirs } from './directories/game-files-loader';
 import { buildMenu } from './menu';
 import { serverStartup } from './server';
@@ -19,6 +20,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1100,
     height: 700,
+    icon: join(__dirname, '..', '..', 'assets', 'icon.png'),
     backgroundColor: '#191622',
     webPreferences: {
       nodeIntegration: false,

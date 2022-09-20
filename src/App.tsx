@@ -1,6 +1,5 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import type { Scrollbar } from "smooth-scrollbar/scrollbar";
-import SmoothScrollbar from "smooth-scrollbar";
 
 import LayerProvider from './providers/Layers';
 import MapProvider from './providers/Map';
@@ -14,25 +13,18 @@ import { Sidebar } from './components/Sidebar';
 
 import './styles/global.scss';
 import Cursor from "../assets/trashcursor.png";
-import { DisableScrollPlugin } from './utils/scrollbar-plugin';
 import ZoomProvider from './providers/Zoom';
 
 export function App() {
   const scrollbarNode = useRef<HTMLDivElement>(null);
   const scrollbar = useRef<Scrollbar>(null!);
 
-  // useEffect(() => {
-  //   if (scrollbarNode.current) {
-  //     SmoothScrollbar.use(DisableScrollPlugin);
-  //     scrollbar.current = SmoothScrollbar.init(scrollbarNode.current, { alwaysShowTracks: true })
-  //   }
-  // }, []);
-
   return (
     <LayerProvider>
       <MapProvider>
         <MouseModeProvider>
           <ShortcutProvider>
+            {/* refs are being defined within zoom provider because like this i can control when scrollbar starts to exist, hence, controlling listener order */}
             <ZoomProvider elemRef={scrollbarNode} scrollRef={scrollbar}>
               {/* added this because i'm noob at webpack and couldn't make this load only within scss */}
               <img style={{ display: 'none' }} src={Cursor} />
