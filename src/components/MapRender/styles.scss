@@ -5,5 +5,13 @@
 
   .image-grid {
     display: grid;
+    user-select: none;
+    -webkit-user-drag: none;
+
+    img {
+      user-select: none;
+      pointer-events: none;
+      -webkit-user-drag: none;
+    }
   }
 }

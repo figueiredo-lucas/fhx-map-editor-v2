@@ -17,6 +17,10 @@ body {
   cursor: grab;
 }
 
+.force-grab {
+  cursor: grabbing !important;
+}
+
 .grab:active {
   cursor: grabbing;
 }
@@ -31,4 +35,16 @@ body {
 
 .deletion {
   cursor: url(/assets/trashcursor.png) 4 2, auto;
+}
+
+.main {
+  display: flex;
+}
+
+.scroll-container {
+  flex: 1;
+  max-height: calc(100vh - 3rem);
+  & > .scroll-content {
+    width: calc(100vw - 240px);
+  }
 }

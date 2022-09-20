@@ -1,15 +1,32 @@
+import { useEffect, useRef } from 'react';
+import type { Scrollbar } from "smooth-scrollbar/scrollbar";
+import SmoothScrollbar from "smooth-scrollbar";
+
+import LayerProvider from './providers/Layers';
+import MapProvider from './providers/Map';
+import MouseModeProvider from './providers/MouseMode';
+import ShortcutProvider from './providers/Shortcuts';
+
 import { Container } from './components/Container'
 import { Header } from './components/Header';
 import { Loading } from './components/Loading';
 import { Sidebar } from './components/Sidebar';
-import LayerProvider from './providers/Layers';
-import MapProvider from './providers/Map';
-import MouseModeProvider from './providers/MouseMode';
+
 import './styles/global.scss';
 import Cursor from "../assets/trashcursor.png";
-import ShortcutProvider from './providers/Shortcuts';
+import { DisableScrollPlugin } from './utils/scrollbar-plugin';
 
 export function App() {
+  const scrollbarNode = useRef<HTMLDivElement>(null);
+  const scrollbar = useRef<Scrollbar>(null!);
+
+  useEffect(() => {
+    if (scrollbarNode.current) {
+      SmoothScrollbar.use(DisableScrollPlugin);
+      scrollbar.current = SmoothScrollbar.init(scrollbarNode.current, { alwaysShowTracks: true })
+    }
+  }, []);
+
   return (
     <LayerProvider>
       <MapProvider>
@@ -19,10 +36,12 @@ export function App() {
             <img style={{ display: 'none' }} src={Cursor} />
             <Loading />
             <Header />
-            <div style={{ display: 'flex' }}>
-              <Container />
+            <main className="main">
+              <div className="scroll-container" ref={scrollbarNode}>
+                <Container />
+              </div>
               <Sidebar />
-            </div>
+            </main>
           </ShortcutProvider>
         </MouseModeProvider>
       </MapProvider>

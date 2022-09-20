@@ -1,4 +1,5 @@
 import React, { useEffect, useReducer, useState } from 'react'
+import SmoothScrollbar from "smooth-scrollbar";
 import { useLayerContext } from '../../providers/Layers';
 import { useMapContext } from '../../providers/Map';
 import { Grid } from '../Grid';
@@ -9,7 +10,6 @@ import './styles.scss';
 export const MapRender = () => {
 
   const [zoom, setZoom] = useState(100);
-  const [zoomLock, setZoomLock] = useState(false);
   const [mapMeta, dispatch] = useReducer(mapEntryReducer, initialState);
   const map = useMapContext();
   const layerCtx = useLayerContext();
@@ -20,23 +20,38 @@ export const MapRender = () => {
     } else {
       dispatch({ type: CLEAR_MAP_META });
     }
-    setZoomLock(false);
   }, [map]);
 
   useEffect(() => {
+    const scrollbar = SmoothScrollbar.getAll()[0];
+    let timeout: NodeJS.Timeout | undefined = undefined;
     const ctrlScrollZoom = (event: WheelEvent) => {
       if (!event.altKey) return;
-      event.preventDefault();
 
-      let growth = zoom > 1000 ? 100 : 50;
-      if (event.deltaY < 0) {
-        if (!zoomLock) {
-          setZoom((zoom) => zoom >= 2000 ? zoom : zoom + growth);
+      event.preventDefault();
+      if (timeout) clearTimeout(timeout);
+      scrollbar.updatePluginOptions('disable-scroll', { disabled: true });
+      timeout = setTimeout(() => {
+        scrollbar.updatePluginOptions('disable-scroll', { disabled: false });
+      }, 1000);
+
+      setZoom((zoom) => {
+        const { x, y } = scrollbar.offset;
+        const tileSize = 128 * (zoom / 100);
+        const deltaSize = 128 * 0.2; // delta will always be 20%
+        const posX = x / 1.5 / tileSize; // empirically tested to be 1.5
+        const posY = y / 1.5 / tileSize;
+        const newZoom = event.deltaY < 0 ? zoom + 20 : zoom - 20;
+        scrollbar.setPosition(x + deltaSize * posX, y + deltaSize * posY);
+
+        if (event.deltaY < 0) {
+          return zoom >= 580 ? zoom : newZoom;
+        } else if (event.deltaY > 0) {
+          return zoom <= 30 ? zoom : newZoom;
         }
-      } else if (event.deltaY > 0) {
-        setZoom((zoom) => zoom < 100 ? zoom : zoom - growth);
-        setZoomLock(false);
-      }
+
+        return zoom;
+      });
     }
 
     window.addEventListener('wheel', ctrlScrollZoom, { passive: false });
@@ -44,14 +59,11 @@ export const MapRender = () => {
     return () => {
       window.removeEventListener('wheel', ctrlScrollZoom);
     }
-  }, [zoomLock]);
+  }, []);
 
   const hasEntries = mapMeta.mapEntries.length > 0;
 
-  const size = hasEntries ? (window.screen.availHeight * 0.8) / (mapMeta.maxZ) * (zoom / 100) : 0;
-  if (size > (window.screen.availHeight * 0.7) && !zoomLock) {
-    setZoomLock(true);
-  }
+  const size = hasEntries ? 128 * (zoom / 100) : 0;
   const gridSize = hasEntries ? mapMeta.maxX : 0;
 
   return (

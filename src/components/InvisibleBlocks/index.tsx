@@ -44,7 +44,7 @@ export const InvisBlocks = ({ size, mapMeta, style }: { size: number, mapMeta: M
         layerCtx?.toggleLayer(LayerEnum.LOADING, false);
       }
     }
-  }, [mapMeta])
+  }, [mapMeta, size])
 
   return (
     <>
