@@ -1,7 +1,6 @@
 import React, { PropsWithChildren, useContext, useEffect, useState } from "react";
 import { BWH } from "../../electron/parsers/bwh/bwh";
-import { LayerEnum, useLayerContext } from "./Layers";
-
+import { useLayerContext } from "./Layers";
 
 const MapContext = React.createContext<BWH | null>(null);
 
