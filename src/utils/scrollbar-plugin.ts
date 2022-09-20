@@ -9,7 +9,6 @@ export class DisableScrollPlugin extends ScrollbarPlugin {
   };
 
   transformDelta(delta: Data2d) {
-    console.log('to acolá');
     return this.options.disabled ? { x: 0, y: 0 } : delta;
   }
 }
