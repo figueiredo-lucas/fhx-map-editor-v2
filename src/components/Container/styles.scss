@@ -1,7 +1,8 @@
 .container {
-  padding: 2rem;
-  min-height: calc(100vh - 3rem);
-  min-width: calc(100vw - 240px);
+  min-height: 50000px;
+  min-width: 50000px;
   background: #f5f5f5;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

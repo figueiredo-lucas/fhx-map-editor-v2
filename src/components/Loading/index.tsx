@@ -7,11 +7,13 @@ export const Loading = () => {
   const layerCtx = useLayerContext();
 
   useEffect(() => {
+    console.log('useEffect - Loading - []');
     window.Main.on('show-loading', () => {
       layerCtx?.toggleLayer(LayerEnum.LOADING, true);
     });
 
     return () => {
+      console.log('Destruct - useEffect - Loading - []');
       window.Main.off('show-loading');
     }
   }, []);

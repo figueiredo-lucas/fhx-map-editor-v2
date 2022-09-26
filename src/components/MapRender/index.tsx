@@ -12,9 +12,10 @@ export const MapRender = () => {
   const [mapMeta, dispatch] = useReducer(mapEntryReducer, initialState);
   const map = useMapContext();
   const layerCtx = useLayerContext();
-  const [zoom] = useZoomContext();
+  const { zoom } = useZoomContext();
 
   useEffect(() => {
+    console.log('useEffect - MapRender - [map]');
     if (map) {
       dispatch({ type: BUILD_MAP_META, map });
     } else {

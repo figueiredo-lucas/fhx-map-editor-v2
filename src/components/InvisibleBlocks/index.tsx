@@ -1,11 +1,13 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { LayerEnum, useLayerContext } from '../../providers/Layers';
 import { MapMeta } from '../MapRender/types';
 import './styles.scss';
 
 export const InvisBlocks = ({ size, mapMeta, style }: { size: number, mapMeta: MapMeta, style: any }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null!);
+  const timeoutRef = useRef<NodeJS.Timeout>();
   const layerCtx = useLayerContext();
+  const [rerender, setRerender] = useState(false);
   const drawingSize = size / 128;
 
   const draw = (ctx: CanvasRenderingContext2D) => {
@@ -35,15 +37,27 @@ export const InvisBlocks = ({ size, mapMeta, style }: { size: number, mapMeta: M
   }
 
   useEffect(() => {
-    const canvas = canvasRef.current
-    if (canvas) {
+    console.log('useEffect - InvisBlocks - [rerender]');
+    if (rerender) {
+      const canvas = canvasRef.current
       const context = canvas.getContext('2d');
 
       if (context && mapMeta.mapEntries.length > 0) {
         draw(context);
         layerCtx?.toggleLayer(LayerEnum.LOADING, false);
       }
+      setRerender(false);
     }
+  }, [rerender]);
+
+  useEffect(() => {
+    console.log('useEffect - InvisBlocks - [mapMeta, size]');
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      console.log('passou');
+      setRerender(true);
+      timeoutRef.current = undefined;
+    }, 1000);
   }, [mapMeta, size])
 
   return (

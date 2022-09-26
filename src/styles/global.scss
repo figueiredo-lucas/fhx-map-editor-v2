@@ -45,6 +45,18 @@ body {
   flex: 1;
   max-height: calc(100vh - 3rem);
   & > .scroll-content {
-    width: calc(100vw - 240px);
+    // width: calc(100vw - 240px);
+  }
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(0.5em);
+  }
+  100% {
+    transform: translateY(0px);
   }
 }

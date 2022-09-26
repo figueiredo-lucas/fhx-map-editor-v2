@@ -16,16 +16,17 @@ import Cursor from "../assets/trashcursor.png";
 import ZoomProvider from './providers/Zoom';
 
 export function App() {
-  const scrollbarNode = useRef<HTMLDivElement>(null);
+  const scrollbarNode = useRef<HTMLDivElement>(null!);
   const scrollbar = useRef<Scrollbar>(null!);
 
   return (
     <LayerProvider>
       <MapProvider>
-        <MouseModeProvider>
-          <ShortcutProvider>
-            {/* refs are being defined within zoom provider because like this i can control when scrollbar starts to exist, hence, controlling listener order */}
-            <ZoomProvider elemRef={scrollbarNode} scrollRef={scrollbar}>
+        {/* refs are being defined within zoom provider because like this i can control when scrollbar starts to exist, hence, controlling listener order */}
+        <ZoomProvider elemRef={scrollbarNode} scrollRef={scrollbar}>
+          <MouseModeProvider>
+            <ShortcutProvider>
+
               {/* added this because i'm noob at webpack and couldn't make this load only within scss */}
               <img style={{ display: 'none' }} src={Cursor} />
               <Loading />
@@ -36,9 +37,9 @@ export function App() {
                 </div>
                 <Sidebar />
               </main>
-            </ZoomProvider>
-          </ShortcutProvider>
-        </MouseModeProvider>
+            </ShortcutProvider>
+          </MouseModeProvider>
+        </ZoomProvider>
       </MapProvider>
     </LayerProvider>
   )

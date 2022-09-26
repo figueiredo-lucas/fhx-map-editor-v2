@@ -183,6 +183,7 @@ const ShortcutProvider = ({ children }: PropsWithChildren) => {
   const [mouseInfo, setMouseInfo] = useState<MouseInfoType>({ button: MouseButton.NONE, x: -1, y: -1 });
 
   useEffect(() => {
+    console.log('useEffect - Shortcut - NoDeps');
     const keydownHandler = (event: KeyboardEvent) => {
       const key = event.key.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
       setPressedKeys(pk => {
@@ -260,7 +261,7 @@ const ShortcutProvider = ({ children }: PropsWithChildren) => {
     window.addEventListener('mousemove', mousemoveHandler);
     window.addEventListener('blur', windowBlurHandler);
     return () => {
-      console.log('killing');
+      console.log('Destruct - useEffect - Shortcut - NoDeps');
       window.removeEventListener('keydown', keydownHandler);
       window.removeEventListener('keyup', keyupHandler);
       window.removeEventListener('mousedown', mousedownHandler);
